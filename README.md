@@ -30,3 +30,79 @@ The pipeline covers the full cycle: synthetic noise generation, model training w
 - Dataset: MNIST (60,000 train / 10,000 test images)
 
 ## Project Structure
+
+## Installation
+
+```bash
+git clone https://github.com/your-username/your-repo-name.git
+cd your-repo-name
+
+python3 -m venv venv
+source venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+## Usage
+
+### Train Locally
+
+```bash
+cd src
+python train.py --epochs 20 --batch_size 128 --noise_factor 0.5
+python evaluate.py
+```
+
+### Train on Google Colab
+
+1. Upload `notebooks/Image_Denoising_Colab.ipynb` to Google Colab.
+2. Run all cells.
+3. Download the trained model and outputs.
+
+### Run the Streamlit App
+
+```bash
+streamlit run app/streamlit_app.py
+```
+
+## Model Architecture
+
+Encoder:
+- Conv2D (32 filters, 3x3, ReLU) -> MaxPooling2D (2x2)
+- Conv2D (32 filters, 3x3, ReLU) -> MaxPooling2D (2x2) - bottleneck
+
+Decoder:
+- Conv2D (32 filters, 3x3, ReLU) -> UpSampling2D (2x2)
+- Conv2D (32 filters, 3x3, ReLU) -> UpSampling2D (2x2)
+- Conv2D (1 filter, 3x3, Sigmoid) - final denoised output
+
+Trained with the Adam optimizer and Binary Crossentropy loss, using early stopping based on validation loss.
+
+## Evaluation Metrics
+
+- MSE (Mean Squared Error) - average squared pixel-wise difference; lower is better.
+- PSNR (Peak Signal-to-Noise Ratio, dB) - higher is better.
+- SSIM (Structural Similarity Index) - perceptual similarity; closer to 1 is better.
+
+## Results
+
+| Evaluation Scope | MSE | PSNR (dB) | SSIM |
+|---|---|---|---|
+| Noisy vs Original (Baseline) | | | |
+| Denoised vs Original (Model) | | | |
+
+## Limitations
+
+- Trained and evaluated only on MNIST (28x28 grayscale, single handwritten digit per image).
+- Not expected to perform well on natural photos, color images, or multi-object scenes.
+- The image upload feature in the Streamlit app is for qualitative demonstration only, since no clean reference is available for uploaded images.
+
+## Future Work
+
+- Extend to CIFAR-10 or real-world noisy datasets.
+- Experiment with other noise types (salt-and-pepper, speckle).
+- Explore deeper architectures (U-Net-based autoencoders, GAN-based denoising).
+
+## License
+
+This project is licensed under the MIT License.
